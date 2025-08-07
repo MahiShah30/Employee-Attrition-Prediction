@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Attrition Prediction</title>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #50e3c2;
+        --bg-color: #f4f7f9;
+        --card-bg-color: #ffffff;
+        --text-color: #333;
+        --label-color: #555;
+        --border-color: #e1e5e8;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Align to top */
+        min-height: 100vh;
+        margin: 0;
+        padding: 40px 20px;
+        box-sizing: border-box;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 900px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    h2 {
+        text-align: center;
+        color: var(--text-color);
+        margin-bottom: 40px;
+        font-weight: 600;
+    }
+    
+    form {
+        width: 100%;
+    }
+
+    .form-section {
+        background: var(--card-bg-color);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        margin-bottom: 30px;
+    }
+
+    .form-section h3 {
+        margin-top: 0;
+        margin-bottom: 25px;
+        color: var(--primary-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+    }
+
+    .section-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        margin-bottom: 8px;
+        color: var(--label-color);
+        font-weight: 500;
+        font-size: 0.9em;
+    }
+
+    input, select {
+        padding: 12px 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background-color: #fdfdfd;
+        font-family: 'Inter', sans-serif;
+        font-size: 1em;
+        transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    button {
+        width: 100%;
+        padding: 16px;
+        color: white;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .result {
+        text-align: center;
+        margin-top: 10px;
+        padding: 20px;
+        border-radius: 8px;
+        font-size: 20px;
+        font-weight: 600;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .stay { background-color: #d4edda; color: #155724; }
+    .leave { background-color: #f8d7da; color: #721c24; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>Predict Employee Attrition</h2>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <div class="form-section">
+                <h3>Job Information</h3>
+                <div class="section-grid">
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" name="Location" value="{{ form_data.Location }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Emp. Group</label>
+                        <input type="text" name="Emp_Group" value="{{ form_data.Emp_Group }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Function</label>
+                        <select name="Function" required>
+                            <option value="Operation" {% if form_data.Function == 'Operation' %}selected{% endif %}>Operation</option>
+                            <option value="Support" {% if form_data.Function == 'Support' %}selected{% endif %}>Support</option>
+                            <option value="Sales" {% if form_data.Function == 'Sales' %}selected{% endif %}>Sales</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Job Role Match</label>
+                        <select name="Job_Role_Match" required>
+                            <option value="Yes" {% if form_data.Job_Role_Match == 'Yes' %}selected{% endif %}>Yes</option>
+                            <option value="No" {% if form_data.Job_Role_Match == 'No' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Career & Personal History</h3>
+                <div class="section-grid">
+                    <div class="form-group">
+                        <label>Hiring Source</label>
+                        <select name="Hiring_Source" required>
+                            <option value="Direct" {% if form_data.Hiring_Source == 'Direct' %}selected{% endif %}>Direct</option>
+                            <option value="Agency" {% if form_data.Hiring_Source == 'Agency' %}selected{% endif %}>Agency</option>
+                            <option value="Employee Referral" {% if form_data.Hiring_Source == 'Employee Referral' %}selected{% endif %}>Employee Referral</option>
+                        </select>
+                    </div>
+                     <div class="form-group">
+                        <label>Promoted/Non Promoted</label>
+                        <select name="PromotedNon_Promoted" required>
+                            <option value="Promoted" {% if form_data.PromotedNon_Promoted == 'Promoted' %}selected{% endif %}>Promoted</option>
+                            <option value="Non Promoted" {% if form_data.PromotedNon_Promoted == 'Non Promoted' %}selected{% endif %}>Non Promoted</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tenure (Years)</label>
+                        <input type="text" name="Tenure" value="{{ form_data.Tenure }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Experience (Years.Months)</label>
+                        <input type="text" name="Experience_YYMM" value="{{ form_data.Experience_YYMM }}" required>
+                    </div>
+                     <div class="form-group">
+                        <label>Age (Years.Months)</label>
+                        <input type="text" name="Age_in_YY" value="{{ form_data.Age_in_YY }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Marital Status</label>
+                        <select name="Marital_Status" required>
+                            <option value="Single" {% if form_data.Marital_Status == 'Single' %}selected{% endif %}>Single</option>
+                            <option value="Marr." {% if form_data.Marital_Status == 'Marr.' %}selected{% endif %}>Married</option>
+                            <option value="Div." {% if form_data.Marital_Status == 'Div.' %}selected{% endif %}>Divorced</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select name="Gender" required>
+                            <option value="Male" {% if form_data.Gender == 'Male' %}selected{% endif %}>Male</option>
+                            <option value="Female" {% if form_data.Gender == 'Female' %}selected{% endif %}>Female</option>
+                            <option value="Other" {% if form_data.Gender == 'Other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tenure Group</label>
+                        <select name="Tenure_Grp" required>
+                            <option value="< =1" {% if form_data.Tenure_Grp == '< =1' %}selected{% endif %}>&lt;= 1 Year</option>
+                            <option value="> 1 & < =3" {% if form_data.Tenure_Grp == '> 1 & < =3' %}selected{% endif %}>1 to 3 Years</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Predict Attrition</button>
+        </form>
+
+        {% if result %}
+        <div class="result {% if 'STAY' in result %}stay{% else %}leave{% endif %}">
+            {{ result }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
